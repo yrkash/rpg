@@ -1,6 +1,6 @@
 package com.game.service;
 
-import com.game.model.Player;
+import com.game.entity.Player;
 import com.game.repository.PlayerRepository;
 import com.game.util.PlayerNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

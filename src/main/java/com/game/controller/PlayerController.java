@@ -1,20 +1,16 @@
 package com.game.controller;
 
-import com.game.model.Player;
-import com.game.repository.PlayerRepository;
+import com.game.entity.Player;
 import com.game.service.PlayerService;
 import com.game.util.PlayerErrorResponse;
-import com.game.util.PlayerNotCreatedException;
 import com.game.util.PlayerNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/rest")
@@ -29,7 +25,9 @@ public class PlayerController {
 
     @GetMapping("/players")
     public List<Player> getPlayer() {
+
         return playerService.findAll(); // Jackson конвертирует эти объекты в JSON
+//        return null;
     }
 
     @GetMapping("/players/{id}")
@@ -37,6 +35,10 @@ public class PlayerController {
         // Статус - 200
         return playerService.findOne(id);
     }
+
+
+
+
 
     @ExceptionHandler
     private ResponseEntity<PlayerErrorResponse> handleException(PlayerNotFoundException e) {
@@ -51,7 +53,7 @@ public class PlayerController {
     @PostMapping("/players")
     public ResponseEntity<HttpStatus> create(@RequestBody Player player, BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors()) {
+        /*if (bindingResult.hasErrors()) {
             System.out.println("ERROR");
             StringBuilder errorMsg = new StringBuilder();
             List<FieldError> errors = bindingResult.getFieldErrors();
@@ -63,7 +65,7 @@ public class PlayerController {
             }
             throw new PlayerNotCreatedException(errorMsg.toString());
         }
-        playerService.save(player);
+        playerService.save(player);*/
         // отправляем HTTP ответ с пустым телом и со статус 200
         return ResponseEntity.ok(HttpStatus.OK);
     }

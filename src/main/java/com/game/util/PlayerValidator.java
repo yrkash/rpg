@@ -1,6 +1,6 @@
 package com.game.util;
 
-import com.game.model.Player;
+import com.game.entity.Player;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

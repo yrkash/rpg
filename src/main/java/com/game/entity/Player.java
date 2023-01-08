@@ -1,4 +1,4 @@
-package com.game.model;
+package com.game.entity;
 
 import com.game.entity.Profession;
 import com.game.entity.Race;
