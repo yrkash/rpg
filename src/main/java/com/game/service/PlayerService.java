@@ -4,6 +4,9 @@ import com.game.entity.Player;
 import com.game.repository.PlayerRepository;
 import com.game.util.PlayerNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +25,10 @@ public class PlayerService {
     }
 
     public List<Player> findAll() {return playerRepository.findAll();}
+
+    public Page<Player> findAll(Specification<Player> specification, Pageable pageable) {
+        return playerRepository.findAll(specification, pageable);
+    }
 
     public Player findOne(Long id) {
         Optional<Player> foundPlayer = playerRepository.findById(id);
