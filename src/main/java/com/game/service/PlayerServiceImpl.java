@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service("playerService")
 @Repository
 @Transactional
@@ -41,23 +43,53 @@ public class PlayerServiceImpl implements PlayerService{
         return new ResponseEntity<>(createPlayer, HttpStatus.OK);
     }
 
+    private Long validateId(String id) {
+        try {
+            Long idLong = Long.parseLong(id);
+            if (idLong <= 0) return null;
+            else return idLong;
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
     @Override
-    public ResponseEntity<?> existsById(String id) {
-        return null;
+    public ResponseEntity<?> findById(String idString) {
+        Long id;
+        if ((id = validateId(idString)) == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        Optional<Player> player = playerRepository.findById(id);
+
+        if (!player.isPresent())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        else return new ResponseEntity<>(player.get(), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<?> findById(String id) {
-        return null;
+    public ResponseEntity<?> existsById(String idString) {
+        Long id;
+        if ((id = validateId(idString)) == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(playerRepository.existsById(id), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<?> deleteById(String id) {
-        return null;
+    public ResponseEntity<?> deleteById(String idString) {
+        Long id;
+        if ((id = validateId(idString)) == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (!playerRepository.existsById(id))
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        else {
+            playerRepository.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
     }
 
     @Override
     public ResponseEntity<?> update(String id, Player player) {
         return null;
     }
+
+
 }
