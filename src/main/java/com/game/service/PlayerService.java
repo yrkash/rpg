@@ -1,52 +1,24 @@
 package com.game.service;
 
 import com.game.entity.Player;
-import com.game.repository.PlayerRepository;
-import com.game.util.PlayerNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-import java.util.Optional;
+public interface PlayerService {
 
-@Service
-@Transactional(readOnly = true)
-public class PlayerService {
+    Page findAll(Specification<Player> specification, Pageable pageable);
 
-    private final PlayerRepository playerRepository;
+    long count(Specification<Player> specification);
 
-    @Autowired
-    public PlayerService(PlayerRepository playerRepository) {
-        this.playerRepository = playerRepository;
-    }
+    ResponseEntity<?> create(Player player);
 
-    public List<Player> findAll() {return playerRepository.findAll();}
+    ResponseEntity<?> existsById(String id);
 
-    public Page<Player> findAll(Specification<Player> specification, Pageable pageable) {
-        return playerRepository.findAll(specification, pageable);
-    }
+    ResponseEntity<?> findById(String id);
 
-    public Player findOne(Long id) {
-        Optional<Player> foundPlayer = playerRepository.findById(id);
-        return foundPlayer.orElseThrow(PlayerNotFoundException::new);
-    }
+    ResponseEntity<?> deleteById(String id);
 
-    @Transactional
-    public void save(Player player) {
-        enrichPlayer(player);
-        playerRepository.save(player);
-    }
-
-    private void enrichPlayer(Player player) {
-        Double levelCalc = Math.ceil((Math.sqrt(player.getExperience() * 200 + 2500) - 50) / 100);
-        Integer level = levelCalc.intValue();
-        Integer untilNextLevel = 50 * (level + 1) * (level + 2) - player.getExperience();
-        player.setLevel(level);
-        player.setUntilNextLevel(untilNextLevel);
-    }
-
+    ResponseEntity<?> update(String id, Player player);
 }

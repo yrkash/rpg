@@ -33,11 +33,11 @@ public class PlayerController {
 //        return null;
     }*/
 
-    @GetMapping("/players/{id}")
+    /*@GetMapping("/players/{id}")
     public Player getPerson(@PathVariable("id") Long id) {
         // Статус - 200
         return playerService.findOne(id);
-    }
+    }*/
 
 
     @GetMapping(value = "/players")
@@ -67,10 +67,49 @@ public class PlayerController {
 
         return new ResponseEntity<>(playerList, HttpStatus.OK);
     }
+    @GetMapping(value = "/players/count")
+    public ResponseEntity<?> getCount(@RequestParam(value = "name", required = false) String name,
+                                      @RequestParam(value = "title", required = false) String title,
+                                      @RequestParam(value = "race", required = false) Race race,
+                                      @RequestParam(value = "profession", required = false) Profession profession,
+                                      @RequestParam(value = "after", required = false) Long after,
+                                      @RequestParam(value = "before", required = false) Long before,
+                                      @RequestParam(value = "banned", required = false) Boolean banned,
+                                      @RequestParam(value = "minExperience", required = false) Integer minExperience,
+                                      @RequestParam(value = "maxExperience", required = false) Integer maxExperience,
+                                      @RequestParam(value = "minLevel", required = false) Integer minLevel,
+                                      @RequestParam(value = "maxLevel", required = false) Integer maxLevel) {
 
+        int count = ServiceHelper.countByCriteria(playerService, name, title,
+                race, profession,
+                after, before,
+                banned,
+                minExperience, maxExperience,
+                minLevel, maxLevel);
 
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
 
+    @PostMapping(value = "/players")
+    public ResponseEntity<?> create(@RequestBody Player player) {
+        return playerService.create(player);
+    }
 
+    @GetMapping(value = "/players/{id}")
+    public ResponseEntity<?> getPlayerById(@PathVariable String id) {
+        return playerService.findById(id);
+    }
+
+    @DeleteMapping(value = "/players/{id}")
+    public ResponseEntity<?> deletePlayerById(@PathVariable String id) {
+        return playerService.deleteById(id);
+    }
+
+    @PostMapping(value = "/players/{id}")
+    public ResponseEntity<?> updatePlayerById(@PathVariable String id, @RequestBody Player player) {
+        ResponseEntity<?> responseEntity = playerService.update(id, player);
+        return responseEntity;
+    }
 
     @ExceptionHandler
     private ResponseEntity<PlayerErrorResponse> handleException(PlayerNotFoundException e) {
@@ -79,27 +118,6 @@ public class PlayerController {
 
         //в HTTP ответе тело ответа (response) и статус в заголовке
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND); // NOT_FOUND - 404 статус
-    }
-
-
-    @PostMapping("/players")
-    public ResponseEntity<HttpStatus> create(@RequestBody Player player, BindingResult bindingResult) {
-
-        /*if (bindingResult.hasErrors()) {
-            System.out.println("ERROR");
-            StringBuilder errorMsg = new StringBuilder();
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error: errors) {
-                errorMsg.append(error.getField())
-                        .append(" - ")
-                        .append(error.getDefaultMessage())
-                        .append(";");
-            }
-            throw new PlayerNotCreatedException(errorMsg.toString());
-        }
-        playerService.save(player);*/
-        // отправляем HTTP ответ с пустым телом и со статус 200
-        return ResponseEntity.ok(HttpStatus.OK);
     }
 
 }
