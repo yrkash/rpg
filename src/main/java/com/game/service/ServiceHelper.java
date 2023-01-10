@@ -144,12 +144,13 @@ public class ServiceHelper {
 
     //Set level and untilNextLevel for player by experience
     private static void enrichPlayer(Player player) {
-        Double levelCalc = Math.ceil((Math.sqrt(player.getExperience() * 200 + 2500) - 50) / 100);
+        Double levelCalc = Math.floor((Math.sqrt(player.getExperience() * 200 + 2500) - 50) / 100);
         Integer level = levelCalc.intValue();
         Integer untilNextLevel = 50 * (level + 1) * (level + 2) - player.getExperience();
         player.setLevel(level);
         player.setUntilNextLevel(untilNextLevel);
     }
+
 
     public static Boolean validatingFields(Player player) {
 
