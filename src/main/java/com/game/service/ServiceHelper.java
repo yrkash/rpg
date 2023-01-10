@@ -160,9 +160,33 @@ public class ServiceHelper {
                 || player.getName().equals("") || player.getTitle().equals("")
                 || player.getExperience() < 0 || player.getExperience() > 1000000
                 || calendar.get(Calendar.YEAR) < 2000 || calendar.get(Calendar.YEAR) > 3000)
-//                || player.getBirthday().getYear() + 1900 < 2000 || player.getBirthday().getYear() + 1900 > 3000)
             return false;
         else return true;
+    }
+
+    public static Boolean validatingFieldsForUpdate(Player player) {
+
+        Calendar calendar = new GregorianCalendar();
+        if (player.getBirthday() != null ) calendar.setTime(player.getBirthday());
+
+        if ((player.getName() != null && (player.getName().length() > 12 || player.getName().equals("")))
+                || (player.getTitle() != null && (player.getTitle().length() > 30 || player.getTitle().equals("")))
+                || (player.getExperience() != null && (player.getExperience() < 0 || player.getExperience() > 1000000))
+                || (player.getBirthday() != null && (calendar.get(Calendar.YEAR) < 2000 || calendar.get(Calendar.YEAR) > 3000)))
+            return false;
+        return true;
+    }
+
+    public static void updatingNotEmptyFields(Player player, Player playerForUpdate) {
+
+        if (player.getName() != null) playerForUpdate.setName(player.getName());
+        if (player.getTitle() != null) playerForUpdate.setTitle(player.getTitle());
+        if (player.getRace() != null) playerForUpdate.setRace(player.getRace());
+        if (player.getProfession() != null) playerForUpdate.setProfession(player.getProfession());
+        if (player.getBirthday() != null) playerForUpdate.setBirthday(player.getBirthday());
+        if (player.getBanned() != null) playerForUpdate.setBanned(player.getBanned());
+        if (player.getExperience() != null) playerForUpdate.setExperience(player.getExperience());
+        enrichPlayer(playerForUpdate);
     }
 
 

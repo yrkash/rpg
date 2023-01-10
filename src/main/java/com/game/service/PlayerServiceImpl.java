@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
 import java.util.Optional;
 
 @Service("playerService")
@@ -87,9 +88,31 @@ public class PlayerServiceImpl implements PlayerService{
     }
 
     @Override
-    public ResponseEntity<?> update(String id, Player player) {
-        return null;
+    public ResponseEntity<?> update(String idString, Player player) {
+        Long id;
+        if ((id = validateId(idString)) == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        //Если элемента с таким id нет в базе
+        if (!playerRepository.existsById(id))
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        else {
+            Player playerForUpdate = playerRepository.findById(id).get();
+
+            // Если тело запроса пустое
+            if (player.getName() == null && player.getTitle() == null
+                    && player.getRace() == null && player.getExperience() == null
+                    && player.getBirthday() == null && player.getBanned() == null && player.getExperience() == null)
+                return new ResponseEntity<>(playerForUpdate, HttpStatus.OK);
+            else {
+                if (!ServiceHelper.validatingFieldsForUpdate(player)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+                //Заменяем непустыми значениями
+                ServiceHelper.updatingNotEmptyFields(player,playerForUpdate);
+
+                playerRepository.save(playerForUpdate);
+            }
+            return new ResponseEntity<>(playerForUpdate, HttpStatus.OK);
+        }
     }
-
-
 }
