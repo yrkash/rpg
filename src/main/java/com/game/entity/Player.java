@@ -1,11 +1,7 @@
 package com.game.entity;
 
-import com.game.entity.Profession;
-import com.game.entity.Race;
-
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Objects;
 
 @Entity
 @Table (name = "player")

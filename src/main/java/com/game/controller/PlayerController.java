@@ -5,12 +5,9 @@ import com.game.entity.Profession;
 import com.game.entity.Race;
 import com.game.service.PlayerService;
 import com.game.service.ServiceHelper;
-import com.game.util.PlayerErrorResponse;
-import com.game.util.PlayerNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,19 +22,6 @@ public class PlayerController {
     public PlayerController(PlayerService playerService) {
         this.playerService = playerService;
     }
-
-  /*  @GetMapping("/players")
-    public List<Player> getPlayer() {
-
-        return playerService.findAll(); // Jackson конвертирует эти объекты в JSON
-//        return null;
-    }*/
-
-    /*@GetMapping("/players/{id}")
-    public Player getPerson(@PathVariable("id") Long id) {
-        // Статус - 200
-        return playerService.findOne(id);
-    }*/
 
 
     @GetMapping(value = "/players")
@@ -111,13 +95,6 @@ public class PlayerController {
         return responseEntity;
     }
 
-    @ExceptionHandler
-    private ResponseEntity<PlayerErrorResponse> handleException(PlayerNotFoundException e) {
-        PlayerErrorResponse response = new PlayerErrorResponse(
-                "Player with this id wasn't found!", System.currentTimeMillis());
 
-        //в HTTP ответе тело ответа (response) и статус в заголовке
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND); // NOT_FOUND - 404 статус
-    }
 
 }
